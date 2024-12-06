@@ -61,6 +61,10 @@ android {
         }
     }
 
+    hilt {
+        enableAggregatingTask = false
+    }
+
     buildFeatures {
         buildConfig = true
     }
@@ -92,5 +96,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation (libs.play.services.location)
+    implementation(libs.accompanist.permissions)
 }

@@ -8,9 +8,8 @@ import retrofit2.http.Query
 
 interface WeatherApi {
 
-    @GET("/getUltraSrtFcst")
+    @GET("getUltraSrtFcst")
     suspend fun getShortForecast(
-        @Query("serviceKey") serviceKey: String = "",
         @Query("numOfRows") numOfRows : Int,   // 한 페이지 경과 수
         @Query("pageNo") pageNo : Int,          // 페이지 번호
         @Query("dataType") dataType : String = "JSON",   // 응답 자료 형식
