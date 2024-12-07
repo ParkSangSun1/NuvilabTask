@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "680545199011",
+    "project_id": "nuvilabtask",
+    "storage_bucket": "nuvilabtask.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680545199011:android:2cc5c1a10accb68424f016",
+        "android_client_info": {
+          "package_name": "com.pss.nuvilabtask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdvhzVgnceruuGqjdebDWGE7RUMtJg_rQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
