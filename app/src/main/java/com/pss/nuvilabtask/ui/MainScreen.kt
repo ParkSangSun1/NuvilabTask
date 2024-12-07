@@ -33,7 +33,7 @@ fun MainScreen(
 ) {
     val permissionGrantedState by viewModel.permissionGrantedState.collectAsState()
     val shortWeatherInfoState by viewModel.shortWeatherInfoState.collectAsState()
-    val errorState by viewModel.errorState.collectAsState()
+    val errorState by viewModel.errorState.collectAsState(null)
     val context = LocalContext.current
 
     RequestPermissionUsingRememberLauncherForActivityResult(

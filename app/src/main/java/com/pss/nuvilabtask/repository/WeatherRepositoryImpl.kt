@@ -8,10 +8,13 @@ import com.pss.nuvilabtask.data.datasource.WeatherDataSource
 import com.pss.nuvilabtask.data.db.WeatherInfoEntity
 import com.pss.nuvilabtask.data.model.ApiResponseStatus
 import com.pss.nuvilabtask.data.model.toUiStatus
+import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
 import java.util.Locale
 import javax.inject.Inject
@@ -19,14 +22,17 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val datasource: WeatherDataSource,
     private val localDbDataSource: LocalDbDataSource,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : WeatherRepository {
+
+    override val errorState: MutableStateFlow<ErrorType?> = MutableStateFlow(null)
+
     override suspend fun getShortForecast(
         numOfRows: Int,
         pageNo: Int,
         latitude: Double,
         longitude: Double
-    ): ApiResponseStatus.Error? {
+    ): ApiResponseStatus.Error?{
         val point = WeatherCommon.dfsXyConv(latitude, longitude)
 
         val response = datasource.getShortForecast(
@@ -39,6 +45,7 @@ class WeatherRepositoryImpl @Inject constructor(
         )
 
         return when(response){
+            //성공 시 room db에 가장 가까운 시간의 날씨 저장
             is ApiResponseStatus.Success -> {
                 val info = WeatherUIInfo(
                     city = getCityNameFromLocation(latitude, longitude),
@@ -47,6 +54,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     reh = response.data.response.body.items.item.find { it.category == "REH" }?.fcstValue ?: "",
                     time = "${response.data.response.body.items.item.firstOrNull()?.fcstDate ?: ""}${response.data.response.body.items.item.firstOrNull()?.fcstTime ?: ""}"
                 )
+
                 localDbDataSource.saveWeather(
                     WeatherInfoEntity(
                         time = info.time,
@@ -56,9 +64,15 @@ class WeatherRepositoryImpl @Inject constructor(
                         reh = info.reh
                     )
                 )
+
+                errorState.emit(null)
+
                 null
             }
-            is ApiResponseStatus.Error -> response
+            is ApiResponseStatus.Error -> {
+                errorState.emit(response.type)
+                response
+            }
         }
     }
 
