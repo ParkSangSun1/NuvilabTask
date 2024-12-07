@@ -31,17 +31,17 @@ android {
 
         buildConfigField("String", "BASE_URL", "" + localProperties["BASE_URL"] + "")
         buildConfigField("String", "API_KEY", "" + localProperties["API_KEY"] + "")
+        signingConfig = signingConfigs.getByName("debug")
 
     }
-
-
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

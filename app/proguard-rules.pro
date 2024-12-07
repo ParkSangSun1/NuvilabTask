@@ -1,21 +1,30 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
+-keepattributes Signature
+-keepattributes Exceptions
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep,allowobfuscation,allowshrinking class kotlinx.coroutines.flow.Flow
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.**
+
+-keep class retrofit2.converter.gson.GsonConverterFactory { *; }
+-dontwarn retrofit2.converter.gson.GsonConverterFactory
+
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class javax.annotation.** { *; }
+
+-keep class com.pss.nuvilabtask.data.model.** { *; }
+-keep class com.pss.nuvilabtask.model.** { *; }

@@ -1,5 +1,6 @@
 package com.pss.nuvilabtask.di
 
+import com.google.gson.GsonBuilder
 import com.pss.nuvilabtask.BuildConfig
 import com.pss.nuvilabtask.data.Interceptor
 import com.pss.nuvilabtask.data.api.WeatherApi
@@ -13,6 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import java.security.KeyStore
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.TrustManagerFactory
 
@@ -25,10 +27,13 @@ object RetrofitServiceModule {
     internal fun providesWeatherApiService(
     ): WeatherApi {
         val okHttpClientBuilder = OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(Interceptor())
 
         if (BuildConfig.DEBUG) {
             okHttpClientBuilder
-                .addInterceptor(Interceptor())
                 .addInterceptor(HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 })
@@ -40,7 +45,7 @@ object RetrofitServiceModule {
             .baseUrl(
                 BuildConfig.BASE_URL
             )
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .client(okHttpClient)
             .build()
 
