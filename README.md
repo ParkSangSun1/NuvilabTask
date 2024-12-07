@@ -1,5 +1,9 @@
 ## 앱 설치 및 실행 방법
-- 다운로드 후 실행
+local.properies
+```
+API_KEY = "WRr7xLRrlLtdf9QQWwD%2FLiMHqf5Ng%2B7KaREML3arpzi%2FfrYCpwwPWLqxSK7mjDdWgHckNCILn%2FEBRYbMPlE47g%3D%3D"
+BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/"
+```
 
 ## 사용 기술 스택
 - Kotlin & Compose
@@ -19,6 +23,6 @@
 - 데이터 영속성 및 동기화 : Room db를 이용해 Weather 정보를 저장하고 가장 최신 정보를 flow를 이용해 ui에서 보여줬습니다.
 - 오프라인 모드 지원 : Room에 저장된 데이터를 오프라인 시 표시합니다(하단에 네트워크 오류 문구 표시), 네트워크가 다시 연결되었을 시 실패한 api call을 다시 시도하게 구현하였습니다.
 - 백그라운드 데이터 동기화 : WorkManager를 사용해 15분 마다 api call을 실행해 데이터를 최신 상태로 유지할 수 있게 구현하였습니다.
+- 코드 보안 : 빌드 타입이 release 일때 proguard 적용하였습니다.
 - 로그 관리 및 크래시 리포팅 : Firebase Crashlytics를 사용하여 크래시에 대해 대응할 수 있게 구현하였습니다.
 ![image](https://github.com/user-attachments/assets/d0832e89-a8a0-43e0-95fc-0c44fdf7cad7)
-
