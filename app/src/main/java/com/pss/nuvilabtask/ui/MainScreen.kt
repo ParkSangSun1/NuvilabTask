@@ -13,11 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pss.nuvilabtask.R
 import com.pss.nuvilabtask.core.RequestPermissionUsingRememberLauncherForActivityResult
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherUIInfo
@@ -37,7 +39,7 @@ fun MainScreen(
         },
         onPermissionDenied = {
             viewModel.setPermissionGrantedState(false)
-            Toast.makeText(context, "위치 수집에 동의해 주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.need_location_permission, Toast.LENGTH_SHORT).show()
         },
     )
 
@@ -48,13 +50,9 @@ fun MainScreen(
                     latitude = it.latitude,
                     longitude = it.longitude
                 )
-//                viewModel.getShortWeather(
-//                    latitude = it.latitude,
-//                    longitude = it.longitude
-//                )
             },
             onError = {
-                Toast.makeText(context, "위치 정보를 불러오지 못했습니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.failed_get_location, Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -100,12 +98,14 @@ fun ErrorInfo(
     type: ErrorType
 ) {
     Text(
-        text = when (type) {
-            is ErrorType.Http -> "서버에 장애가 발생했습니다"
-            is ErrorType.Network -> "네트워크 연결을 확인해 주세요"
-            is ErrorType.Timeout -> "요청 시간이 초과되었습니다"
-            is ErrorType.Unknown -> "알 수 없는 오류가 발생했습니다"
-        },
+        text = stringResource(
+            id = when (type) {
+                is ErrorType.Http -> R.string.error_type_http
+                is ErrorType.Network -> R.string.error_type_network
+                is ErrorType.Timeout -> R.string.error_type_timeout
+                is ErrorType.Unknown -> R.string.error_type_unknown
+            }
+        ),
         fontSize = 23.sp,
         fontWeight = FontWeight.Bold,
         modifier = modifier,

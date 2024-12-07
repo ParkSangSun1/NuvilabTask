@@ -52,32 +52,6 @@ class MainViewModel @Inject constructor(
         LocationManager.setLocationInfo(latitude, longitude)
     }
 
-    fun getShortWeather(
-        numOfRows: Int = 60,
-        pageNo: Int = 1,
-        latitude: Double,
-        longitude: Double
-    ) = viewModelScope.launch {
-        val response = repository.getShortForecast(
-            numOfRows = numOfRows,
-            pageNo = pageNo,
-            latitude = latitude,
-            longitude = longitude
-        )
-
-        if (response != null) {
-            //Network error로 작업이 실패 했을 때 retry 큐에 저장
-            if (response.type == ErrorType.Network) RequestRetryQueue.addRequest {
-                repository.getShortForecast(
-                    numOfRows = numOfRows,
-                    pageNo = pageNo,
-                    latitude = latitude,
-                    longitude = longitude
-                )
-            }
-        }
-    }
-
     fun setPermissionGrantedState(isGranted: Boolean) {
         _permissionGrantedState.value = isGranted
     }
