@@ -2,7 +2,7 @@ package com.pss.nuvilabtask.data.datasource
 
 import com.pss.nuvilabtask.data.api.WeatherApi
 import com.pss.nuvilabtask.data.model.WeatherResponse
-import com.pss.nuvilabtask.common.safeApiCallResponse
+import com.pss.nuvilabtask.core.safeApiCallResponse
 import com.pss.nuvilabtask.data.model.ApiResponseStatus
 import javax.inject.Inject
 

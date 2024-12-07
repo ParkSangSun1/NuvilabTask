@@ -1,4 +1,4 @@
-package com.pss.nuvilabtask.common
+package com.pss.nuvilabtask.core
 
 import android.graphics.Point
 import java.time.LocalDate

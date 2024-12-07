@@ -1,4 +1,4 @@
-package com.pss.nuvilabtask.common
+package com.pss.nuvilabtask.core
 
 import android.content.Context
 import android.net.ConnectivityManager

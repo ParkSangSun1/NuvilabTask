@@ -1,7 +1,6 @@
-package com.pss.nuvilabtask.common
+package com.pss.nuvilabtask.core
 
 import android.Manifest
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable

@@ -2,19 +2,17 @@ package com.pss.nuvilabtask.repository
 
 import android.content.Context
 import android.location.Geocoder
-import com.pss.nuvilabtask.common.WeatherCommon
+import com.pss.nuvilabtask.core.WeatherCommon
 import com.pss.nuvilabtask.data.datasource.LocalDbDataSource
 import com.pss.nuvilabtask.data.datasource.WeatherDataSource
 import com.pss.nuvilabtask.data.db.WeatherInfoEntity
 import com.pss.nuvilabtask.data.model.ApiResponseStatus
-import com.pss.nuvilabtask.data.model.toUiStatus
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
 import java.util.Locale
 import javax.inject.Inject
@@ -45,29 +43,34 @@ class WeatherRepositoryImpl @Inject constructor(
         )
 
         return when(response){
-            //성공 시 room db에 가장 가까운 시간의 날씨 저장
             is ApiResponseStatus.Success -> {
-                val info = WeatherUIInfo(
-                    city = getCityNameFromLocation(latitude, longitude),
-                    type = getWeatherType(response.data.response.body.items.item.find { it.category == "PTY" }?.fcstValue, response.data.response.body.items.item.find { it.category == "SKY" }?.fcstValue),
-                    t1h = response.data.response.body.items.item.find { it.category == "T1H" }?.fcstValue ?: "",
-                    reh = response.data.response.body.items.item.find { it.category == "REH" }?.fcstValue ?: "",
-                    time = "${response.data.response.body.items.item.firstOrNull()?.fcstDate ?: ""}${response.data.response.body.items.item.firstOrNull()?.fcstTime ?: ""}"
-                )
-
-                localDbDataSource.saveWeather(
-                    WeatherInfoEntity(
-                        time = info.time,
-                        city = info.city,
-                        type = info.type,
-                        t1h = info.t1h,
-                        reh = info.reh
+                //Body 데이터가 비었을 경우 서버 장애
+                if (response.data.response.body == null){
+                    errorState.emit(ErrorType.Http)
+                    ApiResponseStatus.Error(0, "", ErrorType.Http)
+                }
+                //성공 시 room db에 가장 가까운 시간의 날씨 저장
+                else {
+                    val info = WeatherUIInfo(
+                        city = getCityNameFromLocation(latitude, longitude),
+                        type = getWeatherType(response.data.response.body.items.item.find { it.category == "PTY" }?.fcstValue, response.data.response.body.items.item.find { it.category == "SKY" }?.fcstValue),
+                        t1h = response.data.response.body.items.item.find { it.category == "T1H" }?.fcstValue ?: "",
+                        reh = response.data.response.body.items.item.find { it.category == "REH" }?.fcstValue ?: "",
+                        time = "${response.data.response.body.items.item.firstOrNull()?.fcstDate ?: ""}${response.data.response.body.items.item.firstOrNull()?.fcstTime ?: ""}"
                     )
-                )
 
-                errorState.emit(null)
-
-                null
+                    localDbDataSource.saveWeather(
+                        WeatherInfoEntity(
+                            time = info.time,
+                            city = info.city,
+                            type = info.type,
+                            t1h = info.t1h,
+                            reh = info.reh
+                        )
+                    )
+                    errorState.emit(null)
+                    null
+                }
             }
             is ApiResponseStatus.Error -> {
                 errorState.emit(response.type)

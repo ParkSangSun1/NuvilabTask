@@ -110,4 +110,6 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
     testImplementation(libs.androidx.room.testing)
+
+    implementation(libs.work)
 }

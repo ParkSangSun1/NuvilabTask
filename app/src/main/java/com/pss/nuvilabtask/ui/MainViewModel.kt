@@ -2,8 +2,9 @@ package com.pss.nuvilabtask.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pss.nuvilabtask.common.NetworkStateObserver
-import com.pss.nuvilabtask.common.RequestRetryQueue
+import com.pss.nuvilabtask.core.LocationManager
+import com.pss.nuvilabtask.core.NetworkStateObserver
+import com.pss.nuvilabtask.core.RequestRetryQueue
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 import com.pss.nuvilabtask.repository.WeatherRepository
@@ -19,7 +20,6 @@ class MainViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val networkStateObserver: NetworkStateObserver,
 ) : ViewModel() {
-    private val requestRetryQueue = RequestRetryQueue()
 
     private val _permissionGrantedState = MutableStateFlow<Boolean>(false)
     val permissionGrantedState = _permissionGrantedState.asStateFlow()
@@ -40,9 +40,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             //Network가 다시 연결되었을 때 실패한 request 실행
             networkStateObserver.isConnected.collectLatest { isConnected ->
-                if (isConnected) requestRetryQueue.retryAll()
+                if (isConnected) RequestRetryQueue.retryAll()
             }
         }
+    }
+
+    fun setLocationInfo(
+        latitude: Double,
+        longitude: Double
+    ){
+        LocationManager.setLocationInfo(latitude, longitude)
     }
 
     fun getShortWeather(
@@ -60,7 +67,7 @@ class MainViewModel @Inject constructor(
 
         if (response != null) {
             //Network error로 작업이 실패 했을 때 retry 큐에 저장
-            if (response.type == ErrorType.Network) requestRetryQueue.addRequest {
+            if (response.type == ErrorType.Network) RequestRetryQueue.addRequest {
                 repository.getShortForecast(
                     numOfRows = numOfRows,
                     pageNo = pageNo,

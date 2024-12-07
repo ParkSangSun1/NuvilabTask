@@ -1,4 +1,4 @@
-package com.pss.nuvilabtask.common
+package com.pss.nuvilabtask.core
 
 import com.pss.nuvilabtask.model.ApiError
 import com.pss.nuvilabtask.data.model.ApiResponseStatus

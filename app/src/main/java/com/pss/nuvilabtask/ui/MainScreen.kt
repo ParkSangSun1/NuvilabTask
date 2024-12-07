@@ -2,28 +2,23 @@ package com.pss.nuvilabtask.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pss.nuvilabtask.common.GetLocation
-import com.pss.nuvilabtask.common.RequestPermissionUsingRememberLauncherForActivityResult
+import com.pss.nuvilabtask.core.RequestPermissionUsingRememberLauncherForActivityResult
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 
@@ -49,10 +44,14 @@ fun MainScreen(
     if (permissionGrantedState) {
         GetLocation(
             onSuccess = {
-                viewModel.getShortWeather(
+                viewModel.setLocationInfo(
                     latitude = it.latitude,
                     longitude = it.longitude
                 )
+//                viewModel.getShortWeather(
+//                    latitude = it.latitude,
+//                    longitude = it.longitude
+//                )
             },
             onError = {
                 Toast.makeText(context, "위치 정보를 불러오지 못했습니다", Toast.LENGTH_SHORT).show()

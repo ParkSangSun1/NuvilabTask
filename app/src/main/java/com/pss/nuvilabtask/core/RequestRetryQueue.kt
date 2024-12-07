@@ -1,9 +1,9 @@
-package com.pss.nuvilabtask.common
+package com.pss.nuvilabtask.core
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class RequestRetryQueue {
+object RequestRetryQueue {
 
     private val queue = mutableListOf<suspend () -> Unit>()
     private val mutex = Mutex()
