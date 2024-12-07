@@ -3,17 +3,22 @@ package com.pss.nuvilabtask.repository
 import android.content.Context
 import android.location.Geocoder
 import com.pss.nuvilabtask.common.WeatherCommon
+import com.pss.nuvilabtask.data.datasource.LocalDbDataSource
 import com.pss.nuvilabtask.data.datasource.WeatherDataSource
+import com.pss.nuvilabtask.data.db.WeatherInfoEntity
 import com.pss.nuvilabtask.data.model.ApiResponseStatus
 import com.pss.nuvilabtask.data.model.toUiStatus
 import com.pss.nuvilabtask.model.WeatherType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 import java.util.Locale
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
     private val datasource: WeatherDataSource,
+    private val localDbDataSource: LocalDbDataSource,
     @ApplicationContext private val context: Context
 ) : WeatherRepository {
     override suspend fun getShortForecast(
@@ -21,7 +26,7 @@ class WeatherRepositoryImpl @Inject constructor(
         pageNo: Int,
         latitude: Double,
         longitude: Double
-    ): ApiResponseStatus<WeatherUIInfo> {
+    ): ApiResponseStatus.Error? {
         val point = WeatherCommon.dfsXyConv(latitude, longitude)
 
         val response = datasource.getShortForecast(
@@ -33,18 +38,43 @@ class WeatherRepositoryImpl @Inject constructor(
             ny = point.y.toString()
         )
 
-        return response.toUiStatus(
-            if (response is ApiResponseStatus.Success) {
-                val skyState = getWeatherType(response.data.response.body.items.item.find { it.category == "PTY" }?.fcstValue, response.data.response.body.items.item.find { it.category == "SKY" }?.fcstValue)
-
-                WeatherUIInfo(
+        return when(response){
+            is ApiResponseStatus.Success -> {
+                val info = WeatherUIInfo(
                     city = getCityNameFromLocation(latitude, longitude),
-                    type = skyState,
+                    type = getWeatherType(response.data.response.body.items.item.find { it.category == "PTY" }?.fcstValue, response.data.response.body.items.item.find { it.category == "SKY" }?.fcstValue),
                     t1h = response.data.response.body.items.item.find { it.category == "T1H" }?.fcstValue ?: "",
                     reh = response.data.response.body.items.item.find { it.category == "REH" }?.fcstValue ?: "",
+                    time = "${response.data.response.body.items.item.firstOrNull()?.fcstDate ?: ""}${response.data.response.body.items.item.firstOrNull()?.fcstTime ?: ""}"
                 )
-            } else null
-        )
+                localDbDataSource.saveWeather(
+                    WeatherInfoEntity(
+                        time = info.time,
+                        city = info.city,
+                        type = info.type,
+                        t1h = info.t1h,
+                        reh = info.reh
+                    )
+                )
+                null
+            }
+            is ApiResponseStatus.Error -> response
+        }
+    }
+
+    override fun getWeatherInfo(): Flow<WeatherUIInfo?> {
+        return localDbDataSource.getWeatherInfo().transform {
+            if (it == null) emit(null)
+            else emit(
+                WeatherUIInfo(
+                    time = it.time,
+                    city = it.city,
+                    type = it.type,
+                    t1h = it.t1h,
+                    reh = it.reh
+                )
+            )
+        }
     }
 
     private fun getCityNameFromLocation(latitude: Double, longitude: Double): String {

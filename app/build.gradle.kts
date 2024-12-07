@@ -100,4 +100,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation (libs.play.services.location)
     implementation(libs.accompanist.permissions)
+
+
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    testImplementation(libs.androidx.room.testing)
 }
