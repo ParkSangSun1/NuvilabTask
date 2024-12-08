@@ -1,9 +1,10 @@
 ## 앱 설치 및 실행 방법
-local.properies
+local.properies 설정
 ```
 API_KEY = "WRr7xLRrlLtdf9QQWwD%2FLiMHqf5Ng%2B7KaREML3arpzi%2FfrYCpwwPWLqxSK7mjDdWgHckNCILn%2FEBRYbMPlE47g%3D%3D"
 BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/"
 ```
+실기기로 빌드
 
 ## 사용 기술 스택
 - Kotlin & Compose
