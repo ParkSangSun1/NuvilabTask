@@ -13,6 +13,7 @@ BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/"
 - Hilt
 - Room
 - Firebase crashlytics
+- WorkerManager
 
 ## 아키텍처
 - UI -> ViewModel -> Repository -> DataSource(Local & Remote)
