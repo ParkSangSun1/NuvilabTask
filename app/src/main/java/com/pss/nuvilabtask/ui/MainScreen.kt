@@ -1,11 +1,14 @@
 package com.pss.nuvilabtask.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,8 +22,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.Worker
 import com.pss.nuvilabtask.R
 import com.pss.nuvilabtask.core.RequestPermissionUsingRememberLauncherForActivityResult
+import com.pss.nuvilabtask.core.worker.WorkerManager
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 
@@ -31,6 +38,7 @@ fun MainScreen(
     val permissionGrantedState by viewModel.permissionGrantedState.collectAsState()
     val shortWeatherInfoState by viewModel.shortWeatherInfoState.collectAsState()
     val errorState by viewModel.errorState.collectAsState(null)
+    val workInfo by WorkerManager.workInfo.collectAsState()
     val context = LocalContext.current
 
     RequestPermissionUsingRememberLauncherForActivityResult(
@@ -57,8 +65,13 @@ fun MainScreen(
         )
     }
 
-
     Box(modifier = Modifier.fillMaxSize()) {
+        if(workInfo == WorkInfo.State.RUNNING) CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 20.dp)
+        )
+
         shortWeatherInfoState?.let {
             WeatherUIInfo(
                 modifier = Modifier.align(Alignment.Center),

@@ -8,10 +8,12 @@ firebase-crashlytics = "19.3.0"
 junit = "4.13.2"
 kotlinx-serialization-json = "1.5.0"
 lifecycle-runtime-ktx = "2.8.6"
+material3-android = "1.2.0-rc01"
 play-services-location = "21.0.1"
 retrofit = "2.9.0"
 okhttp-logging = "4.10.0"
 gson = "2.9.1"
+bom = "2023.03.00"
 hilt-navigation-compose = "1.1.0"
 hilt-work = "1.1.0"
 hilt-androidx-compiler = "1.1.0"
@@ -21,12 +23,23 @@ work = "2.8.1"
 
 
 [libraries]
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "bom" }
+
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+androidx-material3-android = { module = "androidx.compose.material3:material3-android", version.ref = "material3-android" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room-runtime" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebase-crashlytics" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }

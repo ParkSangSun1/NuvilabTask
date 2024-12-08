@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.pss.nuvilabtask.core.LocationManager
 import com.pss.nuvilabtask.core.NetworkStateObserver
 import com.pss.nuvilabtask.core.RequestRetryQueue
+import com.pss.nuvilabtask.core.worker.WorkerManager
 import com.pss.nuvilabtask.model.ErrorType
 import com.pss.nuvilabtask.model.WeatherUIInfo
 import com.pss.nuvilabtask.repository.WeatherRepository
